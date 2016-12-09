@@ -1,0 +1,7 @@
+imports:
+    - { resource: parameters.yml }
+
+services:
+   twitter.api:
+       class: AppBundle\Service\Twitter
+       arguments: ["%apiUrl%", "%consumerKey%", "%consumerSecret%", "%accessToken%", "%accessTokenSecret%"]
