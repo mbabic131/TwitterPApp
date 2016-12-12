@@ -1,0 +1,64 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Tweet
+ *
+ * @ORM\Table(name="tweets")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TweetRepository")
+ */
+class Tweet
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+   /**
+     * @var int
+     *
+     * @ORM\Column(name="twitter_id", type="integer")
+     */
+    private $twitter_id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="text", type="text", nullable=false)
+     */
+    private $text;
+
+    /**
+     * Tweet have one user
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="tweets")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $user;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="created_at", type="datatime")
+     */
+    private $created_at;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

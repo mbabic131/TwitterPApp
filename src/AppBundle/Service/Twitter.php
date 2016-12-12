@@ -55,12 +55,12 @@ class Twitter {
      *
      * @return stdClass
      */
-	public function getUserByName($name = 'J_Shokac')
+	public function getUserByName($name = '')
 	{
         $baseUrl = $this->apiUrl.'users/show.json';
         $url = $baseUrl.'?screen_name='.$name;
 
-        $OAuthHeader = $this->getOAuthHeader($baseUrl, 'GET',array('screen_name' => $name));
+        $OAuthHeader = $this->getOAuthHeader($baseUrl, 'GET', array('screen_name' => $name));
 
         if(is_object($OAuthHeader)) 
         {
@@ -82,7 +82,7 @@ class Twitter {
      *
      * @return stdClass
      */
-    public function getUserTweets($name = 'elonmusk', $count = 5)
+    public function getUserTweets($name, $count = 5)
     {
         $baseUrl = $this->apiUrl.'statuses/user_timeline.json';
         $url = $baseUrl.'?screen_name='.$name.'&count='.$count;
