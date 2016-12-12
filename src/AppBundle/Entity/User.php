@@ -22,9 +22,9 @@ class User
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="twitter_id", type="integer")
+     * @ORM\Column(name="twitter_id", type="bigint")
      */
     private $twitter_id;
 

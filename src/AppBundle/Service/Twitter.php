@@ -80,9 +80,9 @@ class Twitter {
      * @param string $name
      * @param int $count
      *
-     * @return stdClass
+     * @return array
      */
-    public function getUserTweets($name, $count = 5)
+    public function getUserTweets($name, $count = 20)
     {
         $baseUrl = $this->apiUrl.'statuses/user_timeline.json';
         $url = $baseUrl.'?screen_name='.$name.'&count='.$count;
@@ -172,7 +172,7 @@ class Twitter {
      * @param string $header
      * @param string $url
      *
-     * @return stdClass
+     * @return mixed
      */
     protected function curl($header, $url)
     {

@@ -22,9 +22,9 @@ class Tweet
     private $id;
 
    /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="twitter_id", type="integer")
+     * @ORM\Column(name="twitter_id", type="bigint")
      */
     private $twitter_id;
 
@@ -112,11 +112,11 @@ class Tweet
     /**
      * Set createdAt
      *
-     * @param \datatime $createdAt
+     * @param \DateTime $createdAt
      *
      * @return Tweet
      */
-    public function setCreatedAt(\datatime $createdAt)
+    public function setCreatedAt($createdAt)
     {
         $this->created_at = $createdAt;
 
