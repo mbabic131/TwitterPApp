@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Korisnici {% endblock %}
+
+{% block body %}
+
+	<div class="row">
+		<div class="col-md-2">
+			<h4>Lista svih korisnika</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			{% if users is not empty %}
+				<ul>
+				{% for user in users %}
+					<li><a href="{{ user.screenName }}">{{ user.screenName }}</a></li>
+				{% endfor %}
+				</ul>
+			{% else %}
+				<p>Nema spremljenih korisnika</p>
+			{% endif %}
+		</div> <!-- ./col-md-12 -->
+	</div> <!-- ./row -->
+
+{% endblock %}

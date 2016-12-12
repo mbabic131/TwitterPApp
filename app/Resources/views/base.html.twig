@@ -2,12 +2,40 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Zadatak{% endblock %}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        <style type="text/css">
+            footer {
+                background-color: #d3dded;
+                width: 60%;
+                height: 50px;
+                bottom: 0;
+                position: fixed;
+                text-align: center;
+            }
+            #myName {
+                margin-top: 10px;
+            }
+        </style>
     </head>
     <body>
-        {% block body %}{% endblock %}
+
+        <div class="container">
+            <div class="page-header">
+                <h3 class="text-muted">Zadatak TwitterProxy </h3>
+            </div>
+
+            {% block body %} {% endblock %}
+
+            <footer class="footer">
+                <p id="myName">&copy; Miro Babić</p>
+            </footer>
+
+        </div> <!-- ./container -->
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>

@@ -82,7 +82,7 @@ class Twitter {
      *
      * @return array
      */
-    public function getUserTweets($name, $count = 20)
+    public function getUserTweets($name, $count)
     {
         $baseUrl = $this->apiUrl.'statuses/user_timeline.json';
         $url = $baseUrl.'?screen_name='.$name.'&count='.$count;

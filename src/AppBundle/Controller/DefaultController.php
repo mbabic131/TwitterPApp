@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,37 +13,61 @@ use HttpRequest;
 
 class DefaultController extends Controller
 {
+	/**
+	 * @Route("/", name="user_list")
+	 * @Method("GET")
+	 */
+	public function indexAction()
+	{
+		$em = $this->getDoctrine()->getManager();
+		$users = $em->getRepository('AppBundle:User')->findAll();
+
+		return $this->render('users_list.html.twig', array('users' => $users));
+	}
+
     /**
-     * @Route("/{username}")
+     * @Route("/{username}/{page}", defaults={"page" = 1}, name="user_tweets")
+     * @Method("GET")
      */
-    public function showUserAction($username)
+    public function showUserAction($username, $page)
     {
     	$em = $this->getDoctrine()->getManager();
         $twitter = $this->get('twitter.api');
 
-        $twitterUser = $twitter->getUserByName($username);
+        // Check if user exists in database
+        $user = $em->getRepository('AppBundle:User')->findOneBy(array('screen_name' => $username));
+
+        if (empty($user) || $user == null)
+        {
+        	$twitterUser = $twitter->getUserByName($username);
+
+	        // Check for errors
+	        if (isset($twitterUser->errors))
+	        {
+	        	$message = $user->errors[0]->message;
+	        	echo $message;
+	        	die();
+	        }
+
+	        	$user = $this->storeUser($twitterUser);
+        }
+
+        $userTweets = $twitter->getUserTweets($user->getScreenName(), $this->container->getParameter('number_of_tweets'));
 
         // Check for errors
-        if (isset($twitterUser->errors))
-        {
-        	$message = $user->errors[0]->message;
+        if(isset($userTweets->error)) {
+        	$message = $userTweets->error;
         	echo $message;
         	die();
         }
 
-        // Check if user exists in database
-        $user = $em->getRepository('AppBundle:User')->findOneBy(array('twitter_id' => (int)$twitterUser->id_str));
-
-        if (empty($user) || $user == null)
-        {
-        	$user = $this->storeUser($twitterUser);
-        }
-
-        $userTweets = $twitter->getUserTweets($user->getScreenName());
-
         $this->storeUserTweets($user, $userTweets);
 
-        return new Response("OK");
+        $limit = 5;
+        $tweets = $em->getRepository('AppBundle:Tweet')->getTweets($page, $user);
+        $totalPages = ceil($tweets->count() / $limit);
+
+        return $this->render('show_user.html.twig', array('user' => $user, 'tweets' => $tweets, 'page' => $page, 'total' => $totalPages));
     }
 
     /**
