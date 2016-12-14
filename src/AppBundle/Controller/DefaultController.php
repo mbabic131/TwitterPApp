@@ -59,7 +59,9 @@ class DefaultController extends Controller
             die();
         }
 
+        $tweets = $em->getRepository('AppBundle:Tweet')->searchTweets($user, $search_term);
 
+        return $this->render('search_results.html.twig', array('user' => $user, 'tweets' => $tweets));
     }
 
     /**

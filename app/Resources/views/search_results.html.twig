@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Tweetovi {% endblock %}
+
+{% block body %}
+
+	<div class="row">
+		<h4 class="text-muted" style="margin-bottom:20px;">Korisnik: <b>{{ user.name }}</b> ({{ user.screenName }})</h4>
+		<h5>Pronađeni tweetovi:</h5>
+		<div class="col-xs-12 col-md-8" style="margin-bottom:20px">
+			{% for tweet in tweets %}
+				<div class="well well-sm">
+					<p>{{ tweet[0].tweetText }}</p>
+					<p class="text-muted">Objavljeno: {{ tweet[0].createdAt|date("d-m-Y H:i:s") }}</p>
+				</div>
+			{% endfor %}
+		</div>
+	</div> <!-- ./row -->
+
+{% endblock %}

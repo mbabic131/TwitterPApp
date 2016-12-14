@@ -31,7 +31,7 @@ class Tweet
     /**
      * @var string
      *
-     * @ORM\Column(name="tweet_text", type="text", nullable=false)
+     * @ORM\Column(name="tweet_text", type="text", length=65000, nullable=false)
      */
     private $tweet_text;
 

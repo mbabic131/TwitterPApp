@@ -32,6 +32,19 @@ class TweetRepository extends \Doctrine\ORM\EntityRepository
         return $paginator;
     }
 
+    public function searchTweets($user, $search_term, $page = 1, $limit = 20)
+    {
+        $result = $this->createQueryBuilder('t')
+            ->addSelect("MATCH_AGAINST (t.tweet_text, :searchterm 'IN NATURAL MODE') as score")
+            ->add('where', 'MATCH_AGAINST(t.tweet_text, :searchterm) > 0.8')
+            ->andWhere('t.user = :user')
+            ->setParameters(array('searchterm' => $search_term, 'user' => $user))
+            ->getQuery()
+            ->getResult();
+
+        return $result;  
+    }
+
     /**
      * Helper paginate method.
      *
