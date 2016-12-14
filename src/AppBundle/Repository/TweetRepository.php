@@ -19,7 +19,7 @@ class TweetRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function getTweets($page, $user)
+    public function getTweets($page, $user, $limit)
     {
         $query = $this->createQueryBuilder('t')
                 ->where('t.user = :user')
@@ -27,7 +27,7 @@ class TweetRepository extends \Doctrine\ORM\EntityRepository
                 ->orderBy('t.created_at', 'DESC')
                 ->getQuery();
 
-        $paginator = $this->paginate($query, $page);
+        $paginator = $this->paginate($query, $page, $limit);
 
         return $paginator;
     }
@@ -41,7 +41,7 @@ class TweetRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function paginate($query, $page = 1, $limit = 5)
+    public function paginate($query, $page = 1, $limit)
     {
         $paginator = new Paginator($query);
 

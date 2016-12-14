@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Tweet
  *
- * @ORM\Table(name="tweets", uniqueConstraints={@ORM\UniqueConstraint(name="twitter_id", columns={"twitter_id"})})
+ * @ORM\Table(name="tweets", options={"engine":"MyISAM"}, indexes={@ORM\Index(columns={"tweet_text"},flags={"fulltext"})}, uniqueConstraints={@ORM\UniqueConstraint(name="twitter_id", columns={"twitter_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TweetRepository")
  */
 class Tweet
@@ -31,9 +31,9 @@ class Tweet
     /**
      * @var string
      *
-     * @ORM\Column(name="text", type="text", nullable=false)
+     * @ORM\Column(name="tweet_text", type="text", nullable=false)
      */
-    private $text;
+    private $tweet_text;
 
     /**
      * Tweet have one user
@@ -155,5 +155,29 @@ class Tweet
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set tweetText
+     *
+     * @param string $tweetText
+     *
+     * @return Tweet
+     */
+    public function setTweetText($tweetText)
+    {
+        $this->tweet_text = $tweetText;
+
+        return $this;
+    }
+
+    /**
+     * Get tweetText
+     *
+     * @return string
+     */
+    public function getTweetText()
+    {
+        return $this->tweet_text;
     }
 }

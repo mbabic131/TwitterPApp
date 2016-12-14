@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Pretraga {% endblock %}
+
+{% block body %}
+
+	<div class="row">
+		<div class="col-md-2">
+			<h4>Pretraga tweetova</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+
+			<form method="POST" action="{{ url('search_tweets') }}">
+			  <div class="form-group">
+			    <label for="user">Korisnik</label>
+			    <select id="user" name="user" class="form-control">
+			    	{% for user in users %}
+			    		<option value="{{ user.screenName }}">{{ user.name }} ({{ user.screenName }})</option>
+			    	{% endfor %}
+			    </select>
+			  </div>
+			  <div class="form-group">
+			    <label for="search_term">Tekst</label>
+			    <input type="text" class="form-control" id="search_term" name="search_term" placeholder="Upišite pojam za pretragu">
+			  </div>
+			  <button type="submit" class="btn btn-default">Pretraga</button>
+			</form>
+
+		</div> <!-- ./col-md-12 -->
+	</div> <!-- ./row -->
+
+{% endblock %}

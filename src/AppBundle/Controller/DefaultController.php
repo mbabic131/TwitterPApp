@@ -26,6 +26,43 @@ class DefaultController extends Controller
 	}
 
     /**
+     * Show search form
+     *
+     * @Route("/search", name="search")
+     * @Method("GET")
+     */
+    public function showSearch()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('AppBundle:User')->findAll();
+
+        return $this->render('search_tweets.html.twig', array('users' => $users));
+    }
+
+    /**
+     * Search for tweets
+     *
+     * @Route("/search/tweets", name="search_tweets")
+     * @Method("POST")
+     */
+    public function search(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $screen_name = $request->request->get('user');
+        $search_term = $request->request->get('search_term');
+
+        $user = $em->getRepository('AppBundle:User')->findOneBy(array('screen_name' => $screen_name));
+        if(empty($user) || $user == null)
+        {
+            echo "Korisnik nije pronađen";
+            die();
+        }
+
+
+    }
+
+    /**
      * @Route("/{username}/{page}", defaults={"page" = 1}, name="user_tweets")
      * @Method("GET")
      */
@@ -36,11 +73,9 @@ class DefaultController extends Controller
 
         // Check if user exists in database
         $user = $em->getRepository('AppBundle:User')->findOneBy(array('screen_name' => $username));
-
         if (empty($user) || $user == null)
         {
         	$twitterUser = $twitter->getUserByName($username);
-
 	        // Check for errors
 	        if (isset($twitterUser->errors))
 	        {
@@ -48,23 +83,24 @@ class DefaultController extends Controller
 	        	echo $message;
 	        	die();
 	        }
-
 	        	$user = $this->storeUser($twitterUser);
         }
 
-        $userTweets = $twitter->getUserTweets($user->getScreenName(), $this->container->getParameter('number_of_tweets'));
-
-        // Check for errors
-        if(isset($userTweets->error)) {
-        	$message = $userTweets->error;
-        	echo $message;
-        	die();
+        // Check tweets and save to database
+        if($page == 1) 
+        {
+            $userTweets = $twitter->getUserTweets($user->getScreenName(), $this->container->getParameter('number_of_tweets'));
+            // Check for errors
+            if(isset($userTweets->error)) {
+                $message = $userTweets->error;
+                echo $message;
+                die();
+            }
+            $this->storeUserTweets($user, $userTweets);
         }
 
-        $this->storeUserTweets($user, $userTweets);
-
-        $limit = 5;
-        $tweets = $em->getRepository('AppBundle:Tweet')->getTweets($page, $user);
+        $limit = $this->container->getParameter('pagination_limit');
+        $tweets = $em->getRepository('AppBundle:Tweet')->getTweets($page, $user, $limit);
         $totalPages = ceil($tweets->count() / $limit);
 
         return $this->render('show_user.html.twig', array('user' => $user, 'tweets' => $tweets, 'page' => $page, 'total' => $totalPages));
@@ -111,7 +147,7 @@ class DefaultController extends Controller
     		{
     			$newTweet = new Tweet;
     			$newTweet->setTwitterId((int)$tweet->id_str);
-    			$newTweet->setText($tweet->text);
+    			$newTweet->setTweetText($tweet->text);
     			$newTweet->setUser($user);
     			$newTweet->setCreatedAt(new \DateTime($tweet->created_at));
 

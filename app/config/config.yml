@@ -8,6 +8,7 @@ imports:
 parameters:
     locale: en
     number_of_tweets: 20
+    pagination_limit: 20
 
 framework:
     #esi:             ~
