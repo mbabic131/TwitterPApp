@@ -6,27 +6,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Tweet;
-use HttpRequest;
 
 class DefaultController extends Controller
 {
-	/**
-	 * @Route("/", name="user_list")
-	 * @Method("GET")
-	 */
-	public function indexAction()
-	{
-		$em = $this->getDoctrine()->getManager();
-		$users = $em->getRepository('AppBundle:User')->findAll();
+    /**
+     * List all saved users.
+     *
+     * @Route("/", name="user_list")
+     * @Method("GET")
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('AppBundle:User')->findAll();
 
-		return $this->render('users_list.html.twig', array('users' => $users));
-	}
+        return $this->render('users_list.html.twig', array('users' => $users));
+    }
 
     /**
-     * Show search form
+     * Show search form.
      *
      * @Route("/search", name="search")
      * @Method("GET")
@@ -40,7 +40,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Search for tweets
+     * Search for tweets.
      *
      * @Route("/search/tweets", name="search_tweets")
      * @Method("POST")
@@ -53,9 +53,8 @@ class DefaultController extends Controller
         $search_term = $request->request->get('search_term');
 
         $user = $em->getRepository('AppBundle:User')->findOneBy(array('screen_name' => $screen_name));
-        if(empty($user) || $user == null)
-        {
-            echo "Korisnik nije pronađen";
+        if (empty($user) || $user == null) {
+            echo 'Korisnik nije pronađen';
             die();
         }
 
@@ -65,35 +64,34 @@ class DefaultController extends Controller
     }
 
     /**
+     * Show user tweets.
+     *
      * @Route("/{username}/{page}", defaults={"page" = 1}, name="user_tweets")
      * @Method("GET")
      */
     public function showUserAction($username, $page)
     {
-    	$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $twitter = $this->get('twitter.api');
 
         // Check if user exists in database
         $user = $em->getRepository('AppBundle:User')->findOneBy(array('screen_name' => $username));
-        if (empty($user) || $user == null)
-        {
-        	$twitterUser = $twitter->getUserByName($username);
-	        // Check for errors
-	        if (isset($twitterUser->errors))
-	        {
-	        	$message = $user->errors[0]->message;
-	        	echo $message;
-	        	die();
-	        }
-	        	$user = $this->storeUser($twitterUser);
+        if (empty($user) || $user == null) {
+            $twitterUser = $twitter->getUserByName($username);
+            // Check for errors
+            if (isset($twitterUser->errors)) {
+                $message = $twitterUser->errors[0]->message;
+                echo $message;
+                die();
+            }
+            $user = $this->storeUser($twitterUser);
         }
 
         // Check tweets and save to database
-        if($page == 1) 
-        {
+        if ($page == 1) {
             $userTweets = $twitter->getUserTweets($user->getScreenName(), $this->container->getParameter('number_of_tweets'));
             // Check for errors
-            if(isset($userTweets->error)) {
+            if (isset($userTweets->error)) {
                 $message = $userTweets->error;
                 echo $message;
                 die();
@@ -109,7 +107,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Store new user
+     * Store new user.
      *
      * @param stdClass
      *
@@ -117,9 +115,9 @@ class DefaultController extends Controller
      */
     private function storeUser($twitterUser)
     {
-    	$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
-		$user = new User;
+        $user = new User();
         $user->setTwitterId((int)$twitterUser->id_str);
         $user->setName($twitterUser->name);
         $user->setScreenName($twitterUser->screen_name);
@@ -132,31 +130,27 @@ class DefaultController extends Controller
     }
 
     /**
-     * Store user tweets
+     * Store user tweets.
      *
      * @param $user AppBundle\Entity\User
      * @param $userTweets array
-     *
-     * @return void
      */
     private function storeUserTweets($user, $userTweets)
     {
-    	$em = $this->getDoctrine()->getManager();
-    	foreach ($userTweets as $tweet) {
-    		$checkTweet = $em->getRepository('AppBundle:Tweet')->findOneBy(array('twitter_id' => (int)$tweet->id_str));
+        $em = $this->getDoctrine()->getManager();
+        foreach ($userTweets as $tweet) {
+            $checkTweet = $em->getRepository('AppBundle:Tweet')->findOneBy(array('twitter_id' => (int)$tweet->id_str));
 
-    		if (empty($checkTweet) || $checkTweet == null)
-    		{
-    			$newTweet = new Tweet;
-    			$newTweet->setTwitterId((int)$tweet->id_str);
-    			$newTweet->setTweetText($tweet->text);
-    			$newTweet->setUser($user);
-    			$newTweet->setCreatedAt(new \DateTime($tweet->created_at));
+            if (empty($checkTweet) || $checkTweet == null) {
+                $newTweet = new Tweet();
+                $newTweet->setTwitterId((int) $tweet->id_str);
+                $newTweet->setTweetText($tweet->text);
+                $newTweet->setUser($user);
+                $newTweet->setCreatedAt(new \DateTime($tweet->created_at));
 
-    			$em->persist($newTweet);
-    			$em->flush();
-    		}
-    	}
+                $em->persist($newTweet);
+                $em->flush();
+            }
+        }
     }
-    
 }

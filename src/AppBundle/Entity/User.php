@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * User
+ * User.
  *
  * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="twitter_id", columns={"twitter_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
@@ -56,9 +56,8 @@ class User
      */
     private $created_at;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -67,7 +66,7 @@ class User
         return $this->id;
     }
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -75,9 +74,9 @@ class User
     }
 
     /**
-     * Set twitterId
+     * Set twitterId.
      *
-     * @param integer $twitterId
+     * @param int $twitterId
      *
      * @return User
      */
@@ -89,9 +88,9 @@ class User
     }
 
     /**
-     * Get twitterId
+     * Get twitterId.
      *
-     * @return integer
+     * @return int
      */
     public function getTwitterId()
     {
@@ -99,7 +98,7 @@ class User
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -113,7 +112,7 @@ class User
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -123,7 +122,7 @@ class User
     }
 
     /**
-     * Set screenName
+     * Set screenName.
      *
      * @param string $screenName
      *
@@ -137,7 +136,7 @@ class User
     }
 
     /**
-     * Get screenName
+     * Get screenName.
      *
      * @return string
      */
@@ -147,7 +146,7 @@ class User
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -161,7 +160,7 @@ class User
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -171,7 +170,7 @@ class User
     }
 
     /**
-     * Add tweet
+     * Add tweet.
      *
      * @param \AppBundle\Entity\Tweet $tweet
      *
@@ -185,7 +184,7 @@ class User
     }
 
     /**
-     * Remove tweet
+     * Remove tweet.
      *
      * @param \AppBundle\Entity\Tweet $tweet
      */
@@ -195,7 +194,7 @@ class User
     }
 
     /**
-     * Get tweets
+     * Get tweets.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

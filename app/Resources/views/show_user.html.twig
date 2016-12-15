@@ -18,28 +18,28 @@
 
 		<!-- Pagination -->
 		{% if total > 1 %}
-		<div class="col-sm-12 col-md-offset-3" style="margin-bottom:35px">
-			<nav aria-label="Page navigation">
-				<ul class="pagination pagination-sm">
-				    {# `«` arrow  #}
-				    <li {{ page == 1 ? 'class="disabled"' }}>
-				        <a href="{{ path('user_tweets', {username: user.screenName, page: page-1 < 1 ? 1 : page-1}) }}">«</a>
-				    </li>
+			<div class="col-sm-12 col-md-offset-3" style="margin-bottom:35px">
+				<nav aria-label="Page navigation">
+					<ul class="pagination pagination-sm">
+					    {# `«` arrow  #}
+					    <li {{ page == 1 ? 'class="disabled"' }}>
+					        <a href="{{ path('user_tweets', {username: user.screenName, page: page-1 < 1 ? 1 : page-1}) }}">«</a>
+					    </li>
 
-				    {# Render each page number #}
-				    {% for i in 1..total %}
-				    <li {{ page == i ? 'class="active"' }}>
-				    	<a href="{{ path('user_tweets', {username: user.screenName, page: i}) }}">{{ i }}</a>
-				    </li>
-				    {% endfor %}
+					    {# Render each page number #}
+					    {% for i in 1..total %}
+					    <li {{ page == i ? 'class="active"' }}>
+					    	<a href="{{ path('user_tweets', {username: user.screenName, page: i}) }}">{{ i }}</a>
+					    </li>
+					    {% endfor %}
 
-				    {# `»` arrow #}
-				    <li {{ page == total ? 'class="disabled"' }}>
-				        <a href="{{ path('user_tweets', {username: user.screenName, page: page+1 <= total ? page+1 : page}) }}">»</a>
-				    </li>
-				</ul>
-			</nav>
-		</div>
+					    {# `»` arrow #}
+					    <li {{ page == total ? 'class="disabled"' }}>
+					        <a href="{{ path('user_tweets', {username: user.screenName, page: page+1 <= total ? page+1 : page}) }}">»</a>
+					    </li>
+					</ul>
+				</nav>
+			</div>
 		{% endif %}
 	</div> <!-- ./row -->
 

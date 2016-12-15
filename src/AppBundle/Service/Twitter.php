@@ -2,83 +2,82 @@
 
 namespace AppBundle\Service;
 
-class Twitter {
-
+class Twitter
+{
     /**
-     * Twitter API url
+     * Twitter API url.
      *
      * @var string
      */
-	protected $apiUrl;
+    protected $apiUrl;
 
     /**
-     * Consumer Key (API Key) from Twitter application
+     * Consumer Key (API Key) from Twitter application.
      *
      * @var string
      */
-	protected $consumerKey;
+    protected $consumerKey;
 
     /**
-     * Consumer Secret (API Secret) from Twitter application
+     * Consumer Secret (API Secret) from Twitter application.
      *
      * @var string
      */
-	protected $consumerSecret;
+    protected $consumerSecret;
 
     /**
-     * Access Token from Twitter application
+     * Access Token from Twitter application.
      *
      * @var string
      */
-	protected $accessToken;
+    protected $accessToken;
 
     /**
-     * Access Token Secret from Twitter application
+     * Access Token Secret from Twitter application.
      *
      * @var string
      */
-	protected $accessTokenSecret;
+    protected $accessTokenSecret;
 
-	public function __construct($apiUrl, $consumerKey, $consumerSecret, $accessToken, $accessTokenSecret)
-	{
-		$this->apiUrl = $apiUrl;
-		$this->consumerKey = $consumerKey;
-		$this->consumerSecret = $consumerSecret;
-		$this->accessToken = $accessToken;
-		$this->accessTokenSecret = $accessTokenSecret;
-	}
+    public function __construct($apiUrl, $consumerKey, $consumerSecret, $accessToken, $accessTokenSecret)
+    {
+        $this->apiUrl = $apiUrl;
+        $this->consumerKey = $consumerKey;
+        $this->consumerSecret = $consumerSecret;
+        $this->accessToken = $accessToken;
+        $this->accessTokenSecret = $accessTokenSecret;
+    }
 
     /**
-     * Get Twitter user by screen name
+     * Get Twitter user by screen name.
      *
      * @param string $name
      *
      * @return stdClass
      */
-	public function getUserByName($name = '')
-	{
+    public function getUserByName($name = '')
+    {
         $baseUrl = $this->apiUrl.'users/show.json';
         $url = $baseUrl.'?screen_name='.$name;
 
         $OAuthHeader = $this->getOAuthHeader($baseUrl, 'GET', array('screen_name' => $name));
 
-        if(is_object($OAuthHeader)) 
-        {
+        if (is_object($OAuthHeader)) {
             return $OAuthHeader;
         }
 
-        $header = array('Authorization: ' . $OAuthHeader, 'Expect:');
+        $header = array('Authorization: '.$OAuthHeader, 'Expect:');
 
         $twitterUser = $this->curl($header, $url);
 
         return $twitterUser;
-	}
+    }
 
     /**
-     * Get user tweets by screen name
+     * Get user tweets.
      *
      * @param string $name
-     * @param int $count
+     * @param int    $count
      *
      * @return array
      */
@@ -89,12 +88,11 @@ class Twitter {
 
         $OAuthHeader = $this->getOAuthHeader($baseUrl, 'GET', array('screen_name' => $name, 'count' => $count));
 
-        if(is_object($OAuthHeader)) 
-        {
+        if (is_object($OAuthHeader)) {
             return $OAuthHeader;
         }
 
-        $header = array('Authorization: ' . $OAuthHeader, 'Expect:');
+        $header = array('Authorization: '.$OAuthHeader, 'Expect:');
 
         $userTweets = $this->curl($header, $url);
 
@@ -112,9 +110,8 @@ class Twitter {
      */
     protected function getOAuthHeader($baseUrl, $method = 'GET', $parameters = array())
     {
-        if (empty($this->accessToken) || empty($this->accessTokenSecret) || empty($this->consumerKey) || empty($this->consumerSecret)) 
-        {
-            $message = "Nisu postavljeni svi parametri potrebni za spajanje na Twitter API";
+        if (empty($this->accessToken) || empty($this->accessTokenSecret) || empty($this->consumerKey) || empty($this->consumerSecret)) {
+            $message = 'Nisu postavljeni svi parametri potrebni za spajanje na Twitter API';
             $error = $this->error('', $message);
 
             return $error;
@@ -142,6 +139,7 @@ class Twitter {
 
         // Create headers containing oauth
         $parameterQueryParts[] = 'oauth_signature='.rawurlencode($signature);
+
         return 'OAuth '.implode(', ', $parameterQueryParts);
     }
 
@@ -155,19 +153,19 @@ class Twitter {
     protected function getQueryParameters($parameters = array())
     {
         $query = '';
-        if (count($parameters) > 0) 
-        {
+        if (count($parameters) > 0) {
             $queryParts = array();
             foreach ($parameters as $key => $value) {
                 $queryParts[] = $key.'='.rawurlencode($value);
             }
             $query = implode('&', $queryParts);
         }
+
         return $query;
     }
 
     /**
-     * Make curl request and return data
+     * Make curl request and return data.
      *
      * @param string $header
      * @param string $url
@@ -176,12 +174,12 @@ class Twitter {
      */
     protected function curl($header, $url)
     {
-        $options = array( 
+        $options = array(
             CURLOPT_HTTPHEADER => $header,
             CURLOPT_HEADER => false,
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false
+            CURLOPT_SSL_VERIFYPEER => false,
            );
 
         $curl = curl_init();
@@ -196,24 +194,23 @@ class Twitter {
     }
 
     /**
-     * Format error object
+     * Format error object.
      *
-     * @param int $code
+     * @param int    $code
      * @param string $message
      *
      * @return stdClass
      */
     protected function error($code, $message)
     {
-        $errorObj = new \stdClass;
+        $errorObj = new \stdClass();
         $errorObj->code = $code;
         $errorObj->message = $message;
         $errorArr = array($errorObj);
 
-        $result = new \stdClass;
+        $result = new \stdClass();
         $result->errors = $errorArr;
 
         return $result;
     }
-
 }

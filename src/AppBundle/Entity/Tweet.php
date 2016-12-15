@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tweet
+ * Tweet.
  *
  * @ORM\Table(name="tweets", options={"engine":"MyISAM"}, indexes={@ORM\Index(columns={"tweet_text"},flags={"fulltext"})}, uniqueConstraints={@ORM\UniqueConstraint(name="twitter_id", columns={"twitter_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TweetRepository")
@@ -21,7 +21,7 @@ class Tweet
      */
     private $id;
 
-   /**
+    /**
      * @var string
      *
      * @ORM\Column(name="twitter_id", type="bigint")
@@ -36,7 +36,7 @@ class Tweet
     private $tweet_text;
 
     /**
-     * Tweet have one user
+     * Tweet have one user.
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="tweets")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -50,9 +50,8 @@ class Tweet
      */
     private $created_at;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -62,9 +61,9 @@ class Tweet
     }
 
     /**
-     * Set twitterId
+     * Set twitterId.
      *
-     * @param integer $twitterId
+     * @param int $twitterId
      *
      * @return Tweet
      */
@@ -76,9 +75,9 @@ class Tweet
     }
 
     /**
-     * Get twitterId
+     * Get twitterId.
      *
-     * @return integer
+     * @return int
      */
     public function getTwitterId()
     {
@@ -86,7 +85,7 @@ class Tweet
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -100,7 +99,7 @@ class Tweet
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -110,7 +109,7 @@ class Tweet
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -124,7 +123,7 @@ class Tweet
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \datatime
      */
@@ -134,7 +133,7 @@ class Tweet
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param \AppBundle\Entity\User $user
      *
@@ -148,7 +147,7 @@ class Tweet
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return \AppBundle\Entity\User
      */
@@ -158,7 +157,7 @@ class Tweet
     }
 
     /**
-     * Set tweetText
+     * Set tweetText.
      *
      * @param string $tweetText
      *
@@ -172,7 +171,7 @@ class Tweet
     }
 
     /**
-     * Get tweetText
+     * Get tweetText.
      *
      * @return string
      */
